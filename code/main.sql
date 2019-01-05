@@ -116,11 +116,53 @@ SELECT Categories.*, Products.*
 FROM Categories
 INNER JOIN Products ON Categories.CategoryID=Products.CategoryID
 ORDER BY Categories.CategoryID;
+--left join 1-n
+SELECT Categories.*, Products.*
+FROM Categories
+LEFT JOIN Products ON Categories.CategoryID=Products.CategoryID
+ORDER BY Categories.CategoryID;
+
+--right join 1-n
+SELECT Categories.*, Products.*
+FROM Categories
+RIGHT JOIN Products ON Categories.CategoryID=Products.CategoryID
+ORDER BY Categories.CategoryID;
+--full outer join 1-n
+SELECT Categories.*, Products.*
+FROM Categories
+FULL OUTER JOIN Products ON Categories.CategoryID=Products.CategoryID
+ORDER BY Categories.CategoryID;
+
 --inner join n-1
 SELECT Products.*, Categories.*
 FROM Products
 INNER JOIN Categories ON Products.CategoryID=Categories.CategoryID
 ORDER BY Products.ProductID;
+--union
+SELECT Suppliers.Country FROM Suppliers
+UNION
+SELECT Customers.Country FROM Customers
+ORDER BY Country;
+
+--union all => show dublicates
+SELECT Suppliers.Country FROM Suppliers
+UNION
+SELECT Customers.Country FROM Customers
+ORDER BY Country;
+--group by
+SELECT COUNT(Customers.CustomerID), Customers.Country
+FROM Customers
+GROUP BY Customers.Country
+HAVING Customers.Country IS NOT NULL;
+--having is "where" of group
+--exists
+SELECT Suppliers.*
+FROM Suppliers
+WHERE EXISTS (SELECT ProductName FROM Products WHERE SupplierId = Suppliers.supplierId AND Price > 1000);
+
+
+
+
 
 
 
