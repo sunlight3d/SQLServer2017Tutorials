@@ -49,7 +49,45 @@ UPDATE Customers SET CustomerName = 'Thomas Hardy A', City= 'England' WHERE Cust
 --DELETE FROM Customers WHERE ;
 SELECT TOP 4 * FROM Customers;
 SELECT TOP 50 PERCENT * FROM Customers;
+SELECT * from Customers WHERE CustomerName LIKE 'm%';
+SELECT * from Customers WHERE CustomerName LIKE '%d';
+SELECT * from Customers WHERE CustomerName LIKE '%_%_%';
+SELECT * from Customers WHERE CustomerName LIKE '[ace]%';
+SELECT * from Customers WHERE CustomerName LIKE '[a-e]%';
+SELECT * from Customers WHERE CustomerName NOT LIKE '[a-e]%';
+SELECT * FROM Customers WHERE Country IN ('Brazil', 'Sweden');
 
+DROP TABLE Suppliers;
+CREATE TABLE Suppliers (
+    SupplierID int NOT NULL IDENTITY PRIMARY KEY,    
+    SupplierName varchar(400),
+    ContactName varchar(400),
+    Address varchar(1000),
+    Phone varchar(20),
+    City varchar(150),
+    Country varchar(200)
+);
+INSERT INTO Suppliers(SupplierName,ContactName,Address,Phone,City,Country) VALUES('Pavlova, Ltd', 'Ian Devling','74 Rose St. Moonie Ponds','(03) 444-2343','Melbourne','Australia');
+INSERT INTO Suppliers(SupplierName,ContactName,Address,Phone,City,Country) VALUES('G''s day', 'Wendy Mackenzie','170 Prince Edward Parade Hunter''s Hill','(02) 555-5914','Sydney','Australia');
+INSERT INTO Suppliers(SupplierName,ContactName,Address,Phone,City,Country) VALUES('New Orleans Cajun Delights', 'Shelley Burke','P.O. Box 78934','(03) 444-2343','New Orleans','USA');
+INSERT INTO Suppliers(SupplierName,ContactName,Address,Phone,City,Country) VALUES('Svensk Sjöföda AB', 'Michael Björn','Brovallavägen 231','08-123 45 67','Melbourne','Sweden');
+INSERT INTO Suppliers(SupplierName,ContactName,Address,Phone,City,Country) VALUES('Karkki Oy', 'Anne Heikkonen','Valtakatu 12','(953) 10956','Lappeenranta','Finland');
+INSERT INTO Suppliers(SupplierName,ContactName,Address,Phone,City,Country) VALUES('Escargots Nouveaux', 'Marie Delamare','22, rue H. Voiron','85.57.00.07','Montceau','France');
+INSERT INTO Suppliers(SupplierName,ContactName,Address,Phone,City,Country) VALUES(' Leka Trading', 'Chandra Leka','471 Serangoon Loop, Suite #402','555-8787','Singapore','Singapore');
+
+DROP TABLE Categories;
+CREATE TABLE Categories (
+    CategoryID int NOT NULL IDENTITY PRIMARY KEY,    
+    CategoryName varchar(400),
+    Description text
+);
+INSERT INTO Categories(CategoryName, Description) VALUES('Beverages', 'Soft drinks, beer, coffee, tea');
+INSERT INTO Categories(CategoryName, Description) VALUES('Seafood', 'Fish, crabs, oysters');
+INSERT INTO Categories(CategoryName, Description) VALUES('Cereals', 'Bread, cereals, corn');
+INSERT INTO Categories(CategoryName, Description) VALUES('Confections', 'Candies, and sweet breads');
+INSERT INTO Categories(CategoryName, Description) VALUES('Electronics', 'Laptop, desktop, iphone, ipad, macbook');
+
+DROP TABLE Products;
 CREATE TABLE Products (
     ProductID int NOT NULL IDENTITY PRIMARY KEY,    
     ProductName varchar(400),
@@ -58,3 +96,47 @@ CREATE TABLE Products (
     Unit varchar(250),
     Price float,
 );
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Chocolade', 2,4,'boxes', 12);
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Macbook pro 15.4 inches 2017', 2,6,'boxes', 2200);
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Ipad mini 2014', 2,6,'pieces', 712.35);
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Japanese seafood sushi', 7,2,'dishes', 25.5);
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Beer 555', 3,1,'cups', 12);
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Bird-watching Coffee', 4, 4,'cups', 10.2);
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Schoggi Schokolade', 5,4,'cups', 12);
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Northwoods Cranberry Sauce', 5,2,'jars', 12);
+
+SELECT * FROM Products WHERE SupplierID=2;
+SELECT MIN(Price) FROM Products;
+SELECT MAX(Price) as "Highest price" FROM Products;
+SELECT AVG(Price) as "Average Price" FROM Products;
+SELECT SUM(Price) as "Sum" FROM Products;
+SELECT SUM(Price) as "Sum", COUNT(*) as "Number of Products" FROM Products;
+--inner join 1-n
+SELECT Categories.*, Products.*
+FROM Categories
+INNER JOIN Products ON Categories.CategoryID=Products.CategoryID
+ORDER BY Categories.CategoryID;
+--inner join n-1
+SELECT Products.*, Categories.*
+FROM Products
+INNER JOIN Categories ON Products.CategoryID=Categories.CategoryID
+ORDER BY Products.ProductID;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
