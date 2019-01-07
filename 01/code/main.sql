@@ -67,6 +67,7 @@ CREATE TABLE Suppliers (
     City varchar(150),
     Country varchar(200)
 );
+SELECT * FROM Sys.Tables;
 INSERT INTO Suppliers(SupplierName,ContactName,Address,Phone,City,Country) VALUES('Pavlova, Ltd', 'Ian Devling','74 Rose St. Moonie Ponds','(03) 444-2343','Melbourne','Australia');
 INSERT INTO Suppliers(SupplierName,ContactName,Address,Phone,City,Country) VALUES('G''s day', 'Wendy Mackenzie','170 Prince Edward Parade Hunter''s Hill','(02) 555-5914','Sydney','Australia');
 INSERT INTO Suppliers(SupplierName,ContactName,Address,Phone,City,Country) VALUES('New Orleans Cajun Delights', 'Shelley Burke','P.O. Box 78934','(03) 444-2343','New Orleans','USA');
@@ -159,6 +160,69 @@ HAVING Customers.Country IS NOT NULL;
 SELECT Suppliers.*
 FROM Suppliers
 WHERE EXISTS (SELECT ProductName FROM Products WHERE SupplierId = Suppliers.supplierId AND Price > 1000);
+--clone a table
+SELECT Products.* INTO ProductsBackup FROM Products;
+SELECT Customers.* INTO CustomersBackup FROM Customers WHERE Customers.Country='Sweden';
+SELECT * FROM ProductsBackup;
+--clone a backup table with no-data
+SELECT Products.* INTO ProductsBackup FROM Products WHERE 2=3;
+SELECT * FROM ProductsBackup;
+--backup using "insert into"
+INSERT INTO ProductsBackup(ProductName, Price)
+SELECT Products.ProductName, Products.Price FROM Products;
+--case when
+SELECT Products.*,
+CASE
+    WHEN Products.Price > 10 THEN 'Price: greater than 10'
+    WHEN Products.Price > 100 THEN 'Price: greater than 100'
+    ELSE 'Price: under 10'
+END AS TextPrice
+FROM Products;
+
+--sell and deliver products:
+--A customer meet one of my company's employee and order product.A shipper will deliver product to customer's house
+DROP TABLE Orders;
+CREATE TABLE Orders (
+    OrderID int NOT NULL IDENTITY PRIMARY KEY,    
+    CustomerID int, 
+    EmployeeID int, 
+    OrderDate datetime,
+    ShipperID int, 
+);
+DROP TABLE Shippers;
+CREATE TABLE Shippers (
+    ShipperID int NOT NULL IDENTITY PRIMARY KEY,    
+    ShipperName varchar(400),
+    Phone varchar(20),
+    Description text
+);
+INSERT INTO Shippers(ShipperName, Phone, Description) VALUES('Grab', '(123)-456-789', 'Install Grab in App Store and call');
+INSERT INTO Shippers(ShipperName, Phone, Description) VALUES('Speedy Express', '(503) 555-9831', 'Deliver very fast');
+INSERT INTO Shippers(ShipperName, Phone, Description) VALUES('Federal Shipping', '(500) 555-9931', 'Deliver with low cost');
+
+DROP TABLE Employees;
+CREATE TABLE Employees (
+    EmployeeID int NOT NULL IDENTITY PRIMARY KEY,    
+    FullName varchar(400),
+    DateOfBirth datetime,
+    Notes text
+);
+INSERT INTO Employees(FullName, DateOfBirth, Notes) VALUES()
+
+DROP TABLE OrderDetails;
+CREATE TABLE OrderDetails (
+    OrderDetailID int NOT NULL IDENTITY PRIMARY KEY,    
+    OrderID int,
+    ProductID int,
+    Quantity int
+);
+
+     
+
+
+
+       
+
 
 
 
