@@ -207,7 +207,7 @@ CREATE TABLE Employees (
     DateOfBirth datetime,
     Notes text
 );
-INSERT INTO Employees(FullName, DateOfBirth, Notes) VALUES()
+
 
 DROP TABLE OrderDetails;
 CREATE TABLE OrderDetails (
@@ -216,17 +216,64 @@ CREATE TABLE OrderDetails (
     ProductID int,
     Quantity int
 );
+--Vid2
 
-     
+DROP TABLE Products;
+CREATE TABLE Products (
+    ProductID int NOT NULL IDENTITY PRIMARY KEY,    
+    ProductName varchar(400),
+    SupplierID int,
+    CategoryID int,
+    Unit varchar(250),
+    Price float,
 
+    CONSTRAINT FK_CategoryProduct
+    FOREIGN KEY (CategoryID)
+    REFERENCES Categories(CategoryID)
+    --CONSTRAINT Check_Product CHECK (Price>=0 AND Price<=2000)
+);
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Chocolade', 2,4,'boxes', 12);
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Macbook pro 15.4 inches 2017', 2,6,'boxes', 2200);
+SELECT * FROM Categories WHERE CategoryID=6
 
+ALTER TABLE Products
+ADD CONSTRAINT FK_CategoryProduct
+FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID);
 
-       
+ALTER TABLE Products
+DROP CONSTRAINT FK_CategoryProduct;
 
+SELECT *
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME='Products'
 
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Ipad mini 2014', 2,6,'pieces', 712.35);
 
+ALTER TABLE Products
+ADD CONSTRAINT Check_Product CHECK (Price>=0 AND Price<=2000);
 
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Japanese seafood sushi', 7,2,'dishes', 2001);
+--Modify to:
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Japanese seafood sushi', 7,2,'dishes', 25.5);
 
+ALTER TABLE Products
+ADD CONSTRAINT UN_Product UNIQUE (ProductName);
+
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Beer 555', 3,1,'cups', 12);
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Bird-watching Coffee', 4, 4,'cups', 10.2);
+
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Schoggi Schokolade', 5,4,'cups', 12);
+INSERT INTO Products(ProductName,SupplierID,CategoryID,Unit,Price) VALUES('Northwoods Cranberry Sauce', 5,2,'jars', 12);
+
+--datetime values
+INSERT INTO Employees(FullName, DateOfBirth, Notes) VALUES('Margaret Fuller','1994-10-25', 'He is in sales department');
+--default date
+ALTER TABLE Orders
+ADD CONSTRAINT DF_OrderDate 
+DEFAULT GETDATE() FOR OrderDate;
+
+INSERT INTO Orders(CustomerID,EmployeeID,ShipperID) VALUES(2,1,3);
+SELECT * FROM Orders;
 
 
 
