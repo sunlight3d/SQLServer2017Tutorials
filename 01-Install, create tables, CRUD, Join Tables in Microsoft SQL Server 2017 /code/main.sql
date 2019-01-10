@@ -8,8 +8,8 @@ USE sqltutorials;
 BACKUP DATABASE sqltutorials TO DISK = 'c:\mssql\sqltutorials.bak';
 RESTORE DATABASE sqltutorials FROM DISK = 'c:\mssql\sqltutorials.bak';
 
-DROP USER hoangnd;
-CREATE USER hoangnd for login MyLogin;
+-- DROP USER hoangnd;
+-- CREATE USER hoangnd for login MyLogin;
 
 DROP TABLE Customers;
 
@@ -275,18 +275,6 @@ DEFAULT GETDATE() FOR OrderDate;
 INSERT INTO Orders(CustomerID,EmployeeID,ShipperID) VALUES(2,1,3);
 SELECT * FROM Orders;
 
---trigger
-CREATE TRIGGER sendMail
-ON Customers
-AFTER INSERT, UPDATE, DELETE   
-AS  
-   EXEC msdb.dbo.sp_send_dbmail  
-        @profile_name = 'Admin of sqltutorials',  
-        @recipients = 'sunlight4d@gmail.com',  
-        @body = 'Don''t forget to print a report about out customers.',  
-        @subject = 'Customer''data changed';  
-GO  
-DROP TRIGGER sendMail;  
 
 
 

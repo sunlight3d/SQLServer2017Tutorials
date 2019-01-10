@@ -276,17 +276,84 @@ INSERT INTO Orders(CustomerID,EmployeeID,ShipperID) VALUES(2,1,3);
 SELECT * FROM Orders;
 
 --trigger
-CREATE TRIGGER sendMail
-ON Customers
-AFTER INSERT, UPDATE, DELETE   
-AS  
-   EXEC msdb.dbo.sp_send_dbmail  
-        @profile_name = 'Admin of sqltutorials',  
-        @recipients = 'sunlight4d@gmail.com',  
-        @body = 'Don''t forget to print a report about out customers.',  
-        @subject = 'Customer''data changed';  
-GO  
-DROP TRIGGER sendMail;  
+DROP TRIGGER trg_UpdateProduct;
+
+CREATE TRIGGER trg_UpdateProduct 
+ON Products AFTER UPDATE AS
+DECLARE @Price AS FLOAT
+SET @Price = (SELECT TOP 1 Price FROM Products WHERE Price<0)
+IF @Price < 0
+BEGIN
+    RAISERROR  ('Cannot update negative Price',16,10);
+    ROLLBACK
+END
+--severity level = mức độ nghiêm trọng = 11->20 = error
+-- error state = 0->255
+
+ALTER TABLE Products
+DROP CONSTRAINT Check_Product;
+
+UPDATE Products 
+SET Price=-2.2
+WHERE ProductID=8;
+
+--Add "counts" field to Categories
+ALTER TABLE Categories
+DROP COLUMN counts;
+
+ALTER TABLE Categories
+ADD counts INT;
+--update NULL to 0
+UPDATE Categories
+SET Categories.counts=0
+WHERE Categories.counts is NULL;
+
+DROP TRIGGER trg_InsertProduct;
+
+CREATE TRIGGER trg_InsertProduct 
+ON Products AFTER INSERT AS
+DECLARE @CategoryID AS INT
+BEGIN
+
+    set @CategoryID=(select CategoryID from inserted)
+    UPDATE Categories
+    SET counts = counts+1
+    WHERE CategoryID = @CategoryID;
+END
+INSERT INTO Products(ProductName, SupplierID, CategoryID, Unit, Price)
+VALUES('Iphone XS Plus', 2,1,'pieces',233);
+
+DROP TRIGGER trg_DeleteProduct;
+
+CREATE TRIGGER trg_DeleteProduct 
+ON Products AFTER DELETE AS
+DECLARE @CategoryID AS INT
+BEGIN
+    set @CategoryID=(select CategoryID from deleted)
+    UPDATE Categories
+    SET counts = counts-1
+    WHERE CategoryID = @CategoryID AND counts > 0;
+END
+DELETE FROM Products
+WHERE ProductID=15;
+SELECT * FROM Categories;
+
+ALTER TABLE Products
+DROP COLUMN ProductionDate;
+
+ALTER TABLE Products
+ADD ProductionDate datetime;
+
+DROP TRIGGER trg_InsertProduct2;
+CREATE TRIGGER trg_InsertProduct2
+ON Products AFTER INSERT AS
+DECLARE @ProductionDate AS DATETIME
+set @ProductionDate=(SELECT ProductionDate FROM inserted)
+IF @ProductionDate > GETDATE()
+BEGIN
+    RAISERROR ('ProductionDate must be before Today',16,10);
+    ROLLBACK
+END  
 
 
 
