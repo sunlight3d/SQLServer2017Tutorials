@@ -356,26 +356,7 @@ BEGIN
 END  
 
 
---drop a procedure
-DROP PROCEDURE IF EXISTS searchProducts;   
---Create a procedure
-CREATE PROCEDURE searchProducts   
-    @NameContain nvarchar(200)
-AS   
-    SELECT *  
-    FROM Products   
-    WHERE ProductName LIKE '%'+@NameContain+'%';  
-GO 
---Run a procedure, N - Unicode
-EXECUTE  searchProducts  N'japanese'
 
--- Create View, view does not have "ORDER BY"
-DROP VIEW view_category_products;
-CREATE VIEW view_category_products AS
-SELECT Categories.CategoryName, Products.ProductName, Products.Price
-FROM Categories
-INNER JOIN Products ON Categories.CategoryID=Products.CategoryID;
-SELECT * FROM view_category_products;
 
 
 
